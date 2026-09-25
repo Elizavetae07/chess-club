@@ -155,12 +155,12 @@ async function loadAll() {
   render(week);
 }
 
-// ====== ГЛАВНАЯ ЛОГИКА СВОБОДЕН/ЗАНЯТ ======
+// ====== ЛОГИКА ======
 function isLangRow(item) {
   const s = (item.subject || "").toLowerCase();
   return s.includes("иностранн") || s.includes("язык с нуля") || s.includes("ин.яз") || s.includes("ин. яз");
 }
-function getLangSubNumber(item) {
+function getSubNumber(item) {
   const sub = (item.sub || "").toLowerCase();
   const m = sub.match(/\d+/);
   return m ? m[0] : null;
@@ -189,18 +189,30 @@ function isFree(st, day, para, week) {
   const lang = relevant.find(isLangRow);
   if (lang) {
     if (!st.lang) return { free: false, type: "busy", subject: lang.subject };
-    const subNum = getLangSubNumber(lang);
-    if (subNum === String(st.lang)) {
-      return { free: false, type: "busy", subject: lang.subject };
-    } else if (subNum) {
-      return { free: true, type: "free" };
-    } else {
-      return { free: false, type: "busy", subject: lang.subject };
-    }
+    const subNum = getSubNumber(lang);
+    if (subNum === String(st.lang)) return { free: false, type: "busy", subject: lang.subject };
+    if (subNum) return { free: true, type: "free" };
+    return { free: false, type: "busy", subject: lang.subject };
   }
 
-  // Обычная пара
-  return { free: false, type: "busy", subject: relevant[0].subject };
+  // Пара БЕЗ подгруппы (лекция) — все заняты
+  if (!relevant[0].sub || !/\d/.test(relevant[0].sub)) {
+    return { free: false, type: "busy", subject: relevant[0].subject };
+  }
+
+  // Пара С подгруппой (лабы)
+  const subNum = getSubNumber(relevant[0]);
+  if (!subNum) return { free: false, type: "busy", subject: relevant[0].subject };
+
+  // Если у студента нет sub_lab — считаем СВОБОДНЫМ
+  if (st.sub_lab === null || st.sub_lab === undefined) {
+    return { free: true, type: "free" };
+  }
+  // Совпало — занят, не совпало — свободен
+  if (subNum === String(st.sub_lab)) {
+    return { free: false, type: "busy", subject: relevant[0].subject };
+  }
+  return { free: true, type: "free" };
 }
 
 function moodFor(count) {
