@@ -1,7 +1,15 @@
 [
-  { "order": 10,  "name": "Артём",  "group": "25ИТ-2",  "fiz": "main", "lang": "1",  "sub_lab": "2",  "priority": "always" },
-  { "order": 20,  "name": "Никита", "group": "25ИТ-3",  "fiz": "smg",  "lang": "2",  "sub_lab": "1",  "priority": "always" },
-  { "order": 30,  "name": "Дима",   "group": "25ИТ-2",  "fiz": "main", "lang": "1",  "sub_lab": "2",  "priority": "always" },
-  { "order": 40,  "name": "Полина", "group": "25ВБА-1", "fiz": "main", "lang": null, "sub_lab": null, "priority": "maybe"  },
-  { "order": 50,  "name": "Маша",   "group": "25БХ-1",  "fiz": "smg",  "lang": "2",  "sub_lab": "1",  "priority": "maybe"  }
+  { "order": 10,  "name": "Артём А.",  "group": "25ИТ-2",  "fiz": "main", "lang": "1",  "sub_lab": "1",  "priority": "always" },
+  { "order": 20,  "name": "Артем Н.",  "group": "25ВБА-1",  "fiz": "smg", "lang": "1",  "sub_lab": "2",  "priority": "always" },
+  { "order": 30,  "name": "Артем С.",  "group": "25Э-1",  "fiz": "main", "lang": "1",  "sub_lab": "1",  "priority": "always" },
+  { "order": 40,  "name": "Никита",   "group": "25ИТ-3",  "fiz": "main",  "lang": "2",  "sub_lab": "2",  "priority": "always"  },
+  { "order": 50,  "name": "Маша",  "group": "25БТ-1",  "fiz": "main", "lang": "2",  "sub_lab": "2",  "priority": "always" },
+  { "order": 60,  "name": "Миша",  "group": "25БХ-1",  "fiz": "smg", "lang": "4",  "sub_lab": "1",  "priority": "always" },
+  { "order": 70,  "name": "Лиза", "group": "25ИТ-2", "fiz": "main", "lang": "2", "sub_lab": "2", "priority": "always"  },
+  
+  { "order": 80,  "name": "Анна", "group": "25ИТ-2",  "fiz": "smg",  "lang": "1",  "sub_lab": "2",  "priority": "maybe" },
+  { "order": 90,  "name": "Лена",  "group": "25ИТ-2",  "fiz": "main", "lang": "1",  "sub_lab": "2",  "priority": "maybe" },
+  { "order": 100,  "name": "Исмаил",  "group": "25БХ-1",  "fiz": "main", "lang": "1",  "sub_lab": "1",  "priority": "maybe" },
+  { "order": 110,  "name": "Дима", "group": "25ИТ-2", "fiz": "main", "lang": "2", "sub_lab": "2", "priority": "maybe"  }
+  { "order": 120,  "name": "Полина",   "group": "25ВБА-1",  "fiz": "main", "lang": "1",  "sub_lab": "2",  "priority": "maybe" },
 ]
