@@ -185,7 +185,7 @@ function isFree(st, day, para, week) {
   const onlyInfo = relevant.every(it => it.subject.toLowerCase().includes("информационный час"));
   if (onlyInfo) return { free: true, type: "info" };
 
-  // Физра (точно "физическая культура", а не "физическая химия")
+  // Физра
   const fiz = relevant.find(isFizRow);
   const onlyFiz = fiz && relevant.length === 1;
   if (onlyFiz) {
@@ -193,14 +193,20 @@ function isFree(st, day, para, week) {
     return { free: false, type: "busy", subject: "Физра" };
   }
 
-  // Ин.яз
-  const lang = relevant.find(isLangRow);
-  if (lang) {
-    if (!st.lang) return { free: false, type: "busy", subject: lang.subject };
-    const subNum = getSubNumber(lang);
-    if (subNum === String(st.lang)) return { free: false, type: "busy", subject: lang.subject };
-    if (subNum) return { free: true, type: "free" };
-    return { free: false, type: "busy", subject: lang.subject };
+  // Ин.яз — ищем среди ВСЕХ строк ин.яза
+  const langRows = relevant.filter(isLangRow);
+  if (langRows.length > 0) {
+    if (!st.lang) {
+      // у студента нет ин.яза — считаем занятым (на всякий)
+      return { free: false, type: "busy", subject: langRows[0].subject };
+    }
+    // Ищем строку, где номер подгруппы совпадает
+    const myLang = langRows.find(it => getSubNumber(it) === String(st.lang));
+    if (myLang) {
+      return { free: false, type: "busy", subject: myLang.subject };
+    }
+    // Если есть ин.яз, но не наша подгруппа — свободен
+    return { free: true, type: "free" };
   }
 
   // Пара БЕЗ подгруппы (лекция) — все заняты
