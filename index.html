@@ -108,7 +108,7 @@ function showRandomPhrase() {
 }
 
 // ====== ЛОГИКА ======
-const SEMESTER_START = new Date(2026, 8, 1);
+const SEMESTER_START = new Date(2026, 7, 31);
 const WEEK_DAYS_ORDER = ["Понедельник","Вторник","Среда","Четверг","Пятница"];
 const PARAS = ["8:30-9:50","10:05-11:25","11:55-13:15","13:30-14:50","15:05-16:25","16:40-18:00"];
 
@@ -117,7 +117,7 @@ let schedules = {};
 
 function parseDate(s) {
   const [y,m,d] = s.split("-").map(Number);
-  return new Date(y, m-1, d);
+  return new Date(Date.UTC(y, m-1, d));
 }
 function formatDate(d) {
   const dd = String(d.getDate()).padStart(2,"0");
@@ -142,13 +142,20 @@ function setCurrentWeek() {
   const dow = today.getDay() === 0 ? 6 : today.getDay() - 1;
   const monday = new Date(today);
   monday.setDate(today.getDate() - dow);
+  monday.setHours(0,0,0,0);
   if (today.getDay() === 5 && today.getHours() >= 18) {
     monday.setDate(monday.getDate() + 7);
   }
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
-  document.getElementById("dateFrom").value = monday.toISOString().slice(0,10);
-  document.getElementById("dateTo").value = sunday.toISOString().slice(0,10);
+  // Формируем строку YYYY-MM-DD вручную (без toISOString, который в UTC)
+  const fmt = d => {
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    return `${d.getFullYear()}-${mm}-${dd}`;
+  };
+  document.getElementById("dateFrom").value = fmt(monday);
+  document.getElementById("dateTo").value = fmt(sunday);
 }
 
 async function loadAll() {
