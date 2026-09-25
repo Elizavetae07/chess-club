@@ -10,6 +10,6 @@
   { "order": 80,  "name": "Анна", "group": "25ИТ-2",  "fiz": "smg",  "lang": "1",  "sub_lab": "2",  "priority": "maybe" },
   { "order": 90,  "name": "Лена",  "group": "25ИТ-2",  "fiz": "main", "lang": "1",  "sub_lab": "2",  "priority": "maybe" },
   { "order": 100,  "name": "Исмаил",  "group": "25БХ-1",  "fiz": "main", "lang": "1",  "sub_lab": "1",  "priority": "maybe" },
-  { "order": 110,  "name": "Дима", "group": "25ИТ-2", "fiz": "main", "lang": "2", "sub_lab": "2", "priority": "maybe"  }
-  { "order": 120,  "name": "Полина",   "group": "25ВБА-1",  "fiz": "main", "lang": "1",  "sub_lab": "2",  "priority": "maybe" },
+  { "order": 110,  "name": "Дима", "group": "25ИТ-2", "fiz": "main", "lang": "2", "sub_lab": "2", "priority": "maybe"  },
+  { "order": 120,  "name": "Полина",   "group": "25ВБА-1",  "fiz": "main", "lang": "1",  "sub_lab": "2",  "priority": "maybe" }
 ]
