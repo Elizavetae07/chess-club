@@ -83,7 +83,7 @@ function showRandomPhrase() {
   document.getElementById("motivationBottom").textContent = p2;
 }
 
-const SEMESTER_START = new Date(Date.UTC(2026, 7, 31)); // 31.08.2026
+const SEMESTER_START = new Date(Date.UTC(2026, 7, 31));
 const WEEK_DAYS_ORDER = ["Понедельник","Вторник","Среда","Четверг","Пятница"];
 const PARAS = ["8:30-9:50","10:05-11:25","11:55-13:15","13:30-14:50","15:05-16:25","16:40-18:00"];
 
@@ -160,6 +160,14 @@ function isLangRow(item) {
   const s = (item.subject || "").toLowerCase();
   return s.includes("иностранн") || s.includes("язык с нуля") || s.includes("ин.яз") || s.includes("ин. яз");
 }
+function isFizRow(item) {
+  const s = (item.subject || "").toLowerCase();
+  return s.includes("физическая культура") ||
+         s.includes("физкультура") ||
+         s.includes("физ. культура") ||
+         s.includes("физ-ра") ||
+         s.includes("физ ра");
+}
 function getSubNumber(item) {
   const sub = (item.sub || "").toLowerCase();
   const m = sub.match(/\d+/);
@@ -177,8 +185,8 @@ function isFree(st, day, para, week) {
   const onlyInfo = relevant.every(it => it.subject.toLowerCase().includes("информационный час"));
   if (onlyInfo) return { free: true, type: "info" };
 
-  // Физра
-  const fiz = relevant.find(it => it.subject.toLowerCase().includes("физическ"));
+  // Физра (точно "физическая культура", а не "физическая химия")
+  const fiz = relevant.find(isFizRow);
   const onlyFiz = fiz && relevant.length === 1;
   if (onlyFiz) {
     if (st.fiz === "smg" || !st.fiz) return { free: true, type: "free" };
@@ -204,11 +212,9 @@ function isFree(st, day, para, week) {
   const subNum = getSubNumber(relevant[0]);
   if (!subNum) return { free: false, type: "busy", subject: relevant[0].subject };
 
-  // Если у студента нет sub_lab — считаем СВОБОДНЫМ
   if (st.sub_lab === null || st.sub_lab === undefined) {
     return { free: true, type: "free" };
   }
-  // Совпало — занят, не совпало — свободен
   if (subNum === String(st.sub_lab)) {
     return { free: false, type: "busy", subject: relevant[0].subject };
   }
