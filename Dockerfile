@@ -24,6 +24,7 @@ COPY --from=build /app/out ./
 # ВАЖНО: копируем index.html и students.json в рабочую папку
 COPY index.html ./
 COPY students.json ./
+COPY favicon.png ./
 
 ENV ASPNETCORE_URLS=http://0.0.0.0:10000
 EXPOSE 10000
