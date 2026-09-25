@@ -3,7 +3,7 @@
   { "order": 20,  "name": "Артем Н.",  "group": "25ВБА-1",  "fiz": "smg", "lang": "1",  "sub_lab": "2",  "priority": "always" },
   { "order": 30,  "name": "Артем С.",  "group": "25Э-1",  "fiz": "main", "lang": "1",  "sub_lab": "1",  "priority": "always" },
   { "order": 40,  "name": "Никита",   "group": "25ИТ-3",  "fiz": "main",  "lang": "2",  "sub_lab": "2",  "priority": "always"  },
-  { "order": 50,  "name": "Маша",  "group": "25БТ-1",  "fiz": "main", "lang": "2",  "sub_lab": "2",  "priority": "always" },
+  { "order": 50,  "name": "Маша",  "group": "25БТ-1",  "fiz": "main", "lang": "1",  "sub_lab": "2",  "priority": "always" },
   { "order": 60,  "name": "Миша",  "group": "25БХ-1",  "fiz": "smg", "lang": "4",  "sub_lab": "1",  "priority": "always" },
   { "order": 70,  "name": "Лиза", "group": "25ИТ-2", "fiz": "main", "lang": "2", "sub_lab": "2", "priority": "always"  },
   
