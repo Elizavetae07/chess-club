@@ -1,0 +1,7 @@
+[
+  { "order": 1,   "name": "Артём",  "group": "25ИТ-2", "sub_fiz": 1, "sub_lang": 1, "priority": "always" },
+  { "order": 2,   "name": "Никита", "group": "25ИТ-3", "sub_fiz": 1, "sub_lang": 2, "priority": "always" },
+  { "order": 3,   "name": "Дима",   "group": "25ИТ-2", "sub_fiz": 1, "sub_lang": 1, "priority": "always" },
+  { "order": 10,  "name": "Полина", "group": "25ВБА-1","sub_fiz": null,"sub_lang": null,"priority": "maybe" },
+  { "order": 11,  "name": "Маша",   "group": "25БХ-1", "sub_fiz": null,"sub_lang": 1, "priority": "maybe" }
+]

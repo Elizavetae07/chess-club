@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>♟️ Шахматный клуб</title>
+<style>
+  body { font-family: system-ui, sans-serif; padding: 20px; background: #f5f5f5; margin: 0; }
+
+  h1 { color: #2c3e50; }
+
+  /* Подбадривающая фраза */
+  .motivation {
+    text-align: center; color: #7f8c8d; font-style: italic;
+    font-size: 15px; margin: 10px 0 20px; padding: 8px;
+    background: #ecf0f1; border-radius: 8px;
+  }
+
+  .controls { background: white; padding: 15px; border-radius: 10px;
+              box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px;
+              display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  input[type="date"], button { padding: 8px 12px; font-size: 14px; border-radius: 6px;
+                                border: 1px solid #ccc; }
+  button { background: #5dade2; color: white; border: none; cursor: pointer; }
+  button:hover { background: #3498db; }
+  .week-label { font-weight: bold; color: #2c3e50; }
+
+  /* Дни */
+  .day { background: white; border-radius: 10px; padding: 15px; margin: 15px 0;
+         box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  .day h2 { margin: 0 0 10px; color: #2c3e50; border-bottom: 2px solid #5dade2;
+            padding-bottom: 5px; }
+
+  /* Таблица */
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { border: 1px solid #ddd; padding: 5px 6px; text-align: center; }
+
+  /* Голубенькие шапки */
+  th { background: #d6eaf8; color: #1b4f72; font-weight: 600; font-size: 12px; }
+  .day h2 { color: #1b4f72; }
+
+  /* Строки — имена */
+  td.name { text-align: left; font-weight: 500; background: #eaf4fb; color: #1b4f72;
+            min-width: 120px; }
+  td.group { background: #f4faff; color: #555; font-size: 12px; }
+
+  /* Ячейки */
+  .free { background: #e8f8e8; color: #27ae60; font-weight: bold; }
+  .busy { background: #fdecea; color: #c0392b; font-size: 11px; }
+  .info-hour { background: #fff8d6; color: #b8860b; font-weight: bold; font-size: 11px; }
+
+  /* Итоговая строка */
+  .total-row td { background: #d6eaf8; color: #1b4f72; font-weight: bold; }
+  .total-count { font-size: 14px; padding: 4px 6px; }
+  .count-low  { background: #f8d7da !important; color: #721c24 !important; }
+  .count-high { background: #d4edda !important; color: #155724 !important; }
+  .count-mid  { background: #fff3cd !important; color: #856404 !important; }
+  .smile { font-size: 16px; margin-left: 4px; }
+
+  .hint { color: #666; font-size: 13px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>♟️ Шахматный клуб — расписание</h1>
+<div class="motivation" id="motivationTop">…</div>
+
+<div class="controls">
+  <label>Неделя:</label>
+  <button onclick="shiftWeek(-1)">←</button>
+  <input type="date" id="dateFrom">
+  <span>—</span>
+  <input type="date" id="dateTo">
+  <button onclick="shiftWeek(1)">→</button>
+  <button onclick="loadAll()">Загрузить</button>
+  <span class="week-label" id="weekLabel"></span>
+</div>
+
+<div id="app"></div>
+
+<div class="motivation" id="motivationBottom">…</div>
+
+<script>
+// ====== ФРАЗЫ ======
+const PHRASES = [
+  "♟️ Шахматы — это жизнь, а жизнь — это шахматы.",
+  "🏆 Сегодня отличный день, чтобы сыграть партейку!",
+  "😌 Спокойствие — ключ к победе. И к хорошей сессии.",
+  "♞ Конь ходит буквой Г, а ты — к нам на шахматы!",
+  "💪 Не переживай, если проиграл. Переживай, если не пришёл.",
+  "🎯 Лучший ход — прийти в клуб.",
+  "☕ Возьми печеньку и садись за доску.",
+  "🌟 Ты сегодня молодец, даже если просто открыл эту страницу.",
+  "🧠 Мозг — как мышца. Тренируй его шахматами!",
+  "🎲 Иногда везёт, иногда — учись.",
+  "🐢 Тише едешь — дальше будешь. И мат поставишь.",
+  "🚀 До гроссмейстера — 10000 партий. Начни сегодня!",
+  "🍀 Пусть сегодня ферзь будет на твоей стороне.",
+  "🎩 Умный человек играет в шахматы, мудрый — ещё и приходит вовремя.",
+  "🌈 Каждый проигрыш — это урок. Каждая победа — праздник."
+];
+
+function showRandomPhrase() {
+  const p1 = PHRASES[Math.floor(Math.random() * PHRASES.length)];
+  let p2;
+  do { p2 = PHRASES[Math.floor(Math.random() * PHRASES.length)]; } while (p2 === p1 && PHRASES.length > 1);
+  document.getElementById("motivationTop").textContent = p1;
+  document.getElementById("motivationBottom").textContent = p2;
+}
+
+// ====== ЛОГИКА ======
+const SEMESTER_START = new Date(2026, 8, 1);
+const WEEK_DAYS_ORDER = ["Понедельник","Вторник","Среда","Четверг","Пятница"];
+const PARAS = ["8:30-9:50","10:05-11:25","11:55-13:15","13:30-14:50","15:05-16:25","16:40-18:00"];
+
+let students = [];
+let schedules = {};
+
+function parseDate(s) {
+  const [y,m,d] = s.split("-").map(Number);
+  return new Date(y, m-1, d);
+}
+function formatDate(d) {
+  const dd = String(d.getDate()).padStart(2,"0");
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  return `${dd}.${mm}`;
+}
+function getWeekNumber(date) {
+  const diff = Math.floor((date - SEMESTER_START) / (1000*60*60*24));
+  return Math.floor(diff / 7) + 1;
+}
+function shiftWeek(delta) {
+  const from = parseDate(document.getElementById("dateFrom").value);
+  const to = parseDate(document.getElementById("dateTo").value);
+  from.setDate(from.getDate() + delta*7);
+  to.setDate(to.getDate() + delta*7);
+  document.getElementById("dateFrom").value = from.toISOString().slice(0,10);
+  document.getElementById("dateTo").value = to.toISOString().slice(0,10);
+  loadAll();
+}
+function setCurrentWeek() {
+  const today = new Date();
+  const dow = today.getDay() === 0 ? 6 : today.getDay() - 1;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - dow);
+  if (today.getDay() === 5 && today.getHours() >= 18) {
+    monday.setDate(monday.getDate() + 7);
+  }
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  document.getElementById("dateFrom").value = monday.toISOString().slice(0,10);
+  document.getElementById("dateTo").value = sunday.toISOString().slice(0,10);
+}
+
+async function loadAll() {
+  const app = document.getElementById("app");
+  app.innerHTML = "<p>Загружаю...</p>";
+  const fromStr = document.getElementById("dateFrom").value;
+  const toStr = document.getElementById("dateTo").value;
+  const from = parseDate(fromStr);
+  const to = parseDate(toStr);
+  const week = getWeekNumber(from);
+  document.getElementById("weekLabel").textContent =
+    `(Неделя ${week}: ${formatDate(from)}–${formatDate(to)})`;
+
+  if (students.length === 0) {
+    students = await fetch("/api/students").then(r => r.json());
+  }
+  const groups = [...new Set(students.map(s => s.group))];
+  for (const g of groups) {
+    if (!schedules[g]) {
+      schedules[g] = await fetch(`/api/schedule/${encodeURIComponent(g)}`).then(r => r.json());
+    }
+  }
+  render(week);
+}
+
+// Считаем, свободен ли студент на данной паре
+function isFree(st, day, para, week) {
+  const groupSchedule = schedules[st.group] || {};
+  const items = (groupSchedule[day] || {})[para] || [];
+  const relevant = items.filter(it => it.weeks.length === 0 || it.weeks.includes(week));
+
+  if (relevant.length === 0) return { free: true, type: "free" };
+
+  const onlyInfo = relevant.every(it => it.subject.toLowerCase().includes("информационный час"));
+  if (onlyInfo) return { free: true, type: "info" };
+
+  const fiz = relevant.find(it => it.subject.toLowerCase().includes("физическ"));
+  const onlyFiz = fiz && relevant.length === 1;
+  if (onlyFiz) {
+    if (st.sub_fiz === null || st.sub_fiz === undefined) return { free: true, type: "free" };
+    const match = relevant.find(it => it.sub && it.sub.includes(String(st.sub_fiz)));
+    if (!match) return { free: true, type: "free" };
+    return { free: false, type: "busy" };
+  }
+
+  return { free: false, type: "busy", subject: relevant[0].subject };
+}
+
+// Эмодзи и подпись по количеству
+function moodFor(count) {
+  if (count <= 1) return { emoji: "😢", label: "апатия", cls: "count-low" };
+  if (count === 2) return { emoji: "😐", label: "мало", cls: "count-mid" };
+  if (count <= 4) return { emoji: "😊", label: "норм", cls: "count-high" };
+  return { emoji: "🤩", label: "каеф!", cls: "count-high" };
+}
+
+function render(week) {
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+  const sorted = [...students].sort((a,b) => {
+    if (a.order !== b.order) return a.order - b.order;
+    return (a.priority === "always" ? 0 : 1) - (b.priority === "always" ? 0 : 1);
+  });
+
+  for (const day of WEEK_DAYS_ORDER) {
+    const dayDiv = document.createElement("div");
+    dayDiv.className = "day";
+    let html = `<h2>${day}</h2><table>`;
+    html += `<tr><th>Студент</th><th>Группа</th>`;
+    for (const p of PARAS) html += `<th>${p}</th>`;
+    html += `</tr>`;
+
+    for (const st of sorted) {
+      html += `<tr>`;
+      html += `<td class="name">${st.name}</td>`;
+      html += `<td class="group">${st.group}</td>`;
+      for (const para of PARAS) {
+        const r = isFree(st, day, para, week);
+        if (r.type === "free") html += `<td class="free">окно</td>`;
+        else if (r.type === "info") html += `<td class="info-hour">инф.час</td>`;
+        else html += `<td class="busy">${r.subject || "занят"}</td>`;
+      }
+      html += `</tr>`;
+    }
+
+    // Итоговая строка
+    html += `<tr class="total-row"><td colspan="2">Возможное количество</td>`;
+    for (const para of PARAS) {
+      let freeCount = 0;
+      for (const st of sorted) {
+        if (isFree(st, day, para, week).free) freeCount++;
+      }
+      const m = moodFor(freeCount);
+      html += `<td class="total-count ${m.cls}">${freeCount}<span class="smile">${m.emoji}</span><br><small>${m.label}</small></td>`;
+    }
+    html += `</tr>`;
+
+    html += `</table>`;
+    dayDiv.innerHTML = html;
+    app.appendChild(dayDiv);
+  }
+}
+
+// ====== СТАРТ ======
+showRandomPhrase();
+setCurrentWeek();
+loadAll();
+</script>
+</body>
+</html>
