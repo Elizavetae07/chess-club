@@ -193,37 +193,42 @@ function isFree(st, day, para, week) {
     return { free: false, type: "busy", subject: "Физра" };
   }
 
-  // Ин.яз — ищем среди ВСЕХ строк ин.яза
+  // Ин.яз
   const langRows = relevant.filter(isLangRow);
   if (langRows.length > 0) {
-    if (!st.lang) {
-      // у студента нет ин.яза — считаем занятым (на всякий)
-      return { free: false, type: "busy", subject: langRows[0].subject };
-    }
-    // Ищем строку, где номер подгруппы совпадает
+    if (!st.lang) return { free: false, type: "busy", subject: langRows[0].subject };
     const myLang = langRows.find(it => getSubNumber(it) === String(st.lang));
-    if (myLang) {
-      return { free: false, type: "busy", subject: myLang.subject };
-    }
-    // Если есть ин.яз, но не наша подгруппа — свободен
+    if (myLang) return { free: false, type: "busy", subject: myLang.subject };
     return { free: true, type: "free" };
   }
 
-  // Пара БЕЗ подгруппы (лекция) — все заняты
-  if (!relevant[0].sub || !/\d/.test(relevant[0].sub)) {
+  // Лекция (пара без подгруппы) — все заняты
+  // Проверяем: есть ли ХОТЯ БЫ одна строка без подгруппы
+  const lecture = relevant.find(it => !it.sub || !/\d/.test(it.sub));
+  const subRows = relevant.filter(it => it.sub && /\d/.test(it.sub));
+
+  // Если есть лекция (без подгруппы) — все заняты на ней
+  if (lecture) {
+    return { free: false, type: "busy", subject: lecture.subject };
+  }
+
+  // Тут только пары с подгруппами (лабы)
+  if (subRows.length === 0) {
+    // Странная ситуация — считаем занятым
     return { free: false, type: "busy", subject: relevant[0].subject };
   }
 
-  // Пара С подгруппой (лабы)
-  const subNum = getSubNumber(relevant[0]);
-  if (!subNum) return { free: false, type: "busy", subject: relevant[0].subject };
-
+  // Если у студента нет sub_lab — считаем свободным (ты не указала)
   if (st.sub_lab === null || st.sub_lab === undefined) {
     return { free: true, type: "free" };
   }
-  if (subNum === String(st.sub_lab)) {
-    return { free: false, type: "busy", subject: relevant[0].subject };
+
+  // Ищем среди ВСЕХ подгруппных строк ту, где совпадает номер
+  const myLab = subRows.find(it => getSubNumber(it) === String(st.sub_lab));
+  if (myLab) {
+    return { free: false, type: "busy", subject: myLab.subject };
   }
+  // Ни одна не совпала — свободен
   return { free: true, type: "free" };
 }
 
