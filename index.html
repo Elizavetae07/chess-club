@@ -51,9 +51,9 @@
   /* Итоговая строка */
   .total-row td { background: #d6eaf8; color: #1b4f72; font-weight: bold; }
   .total-count { font-size: 14px; padding: 4px 6px; }
-  .count-low  { background: #f8d7da !important; color: #721c24 !important; }
-  .count-high { background: #d4edda !important; color: #155724 !important; }
-  .count-mid  { background: #fff3cd !important; color: #856404 !important; }
+  .count-low   { background: #f8d7da !important; color: #721c24 !important; }
+  .count-high  { background: #d4edda !important; color: #155724 !important; }
+  .count-white { background: #ffffff !important; color: #333 !important; }
   .smile { font-size: 16px; margin-left: 4px; }
 
   .hint { color: #666; font-size: 13px; margin-top: 8px; }
@@ -200,7 +200,7 @@ function isFree(st, day, para, week) {
 // Эмодзи и подпись по количеству
 function moodFor(count) {
   if (count <= 1) return { emoji: "😢", label: "апатия", cls: "count-low" };
-  if (count === 2) return { emoji: "😐", label: "мало", cls: "count-mid" };
+  if (count === 2) return { emoji: "😐", label: "мало", cls: "count-white" };
   if (count <= 4) return { emoji: "😊", label: "норм", cls: "count-high" };
   return { emoji: "🤩", label: "каеф!", cls: "count-high" };
 }
