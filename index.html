@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>♟️ Шахматный клуб</title>
+<title>♞ Шахматный клуб</title>
   <link rel="icon" type="image/png" href="/favicon.png">
 <style>
-    body { font-family: system-ui, sans-serif; padding: 20px; background: #f0f7f0; margin: 0; }
-  h1 { color: #1e5631; }
+  body { font-family: system-ui, sans-serif; padding: 20px; background: #f0f7f0; margin: 0; }
+  h1 { color: #1e5631; font-size: 28px; }
 
   .motivation {
     text-align: center; color: #4a7c59; font-style: italic;
@@ -48,17 +48,18 @@
   table { border-collapse: collapse; width: 100%; font-size: 13px; }
   th, td { border: 1px solid #a5d6a7; padding: 5px 6px; text-align: center; }
 
-  /* Шапки таблиц — темнее зелёные */
+  /* Шапки таблиц */
   th {
     background: #81c784; color: #ffffff;
     font-weight: 600; font-size: 12px;
   }
 
-  /* Имена студентов — светлее */
+  /* Имена студентов — по центру, ярче, крупнее */
   td.name {
-    text-align: left; font-weight: 500;
-    background: #e8f5e9; color: #1e5631;
-    min-width: 120px;
+    text-align: center; font-weight: 600;
+    background: #e8f5e9; color: #2e7d32;
+    font-size: 13.5px;
+    min-width: 130px;
   }
   td.group { background: #f1f8f2; color: #4a7c59; font-size: 12px; }
 
@@ -81,32 +82,39 @@
     color: #aaa; font-size: 11px;
   }
 
-  /* Пары — светло-голубые */
-  .busy { background: #d6eaf8; color: #1b4f72; font-size: 11px; }
+  /* Пары — светло-голубые, чуть крупнее */
+  .busy {
+    background: #d6eaf8; color: #1b4f72;
+    font-size: 12px;
+  }
 
   /* Окна — белые */
-  .free { background: #ffffff; color: #4a7c59; font-weight: bold; }
+  .free { background: #ffffff; color: #4a7c59; font-weight: bold; font-size: 13px; }
 
-  /* Инф.час — жёлтый (для отличия) */
-  .info-hour { background: #fff8d6; color: #b8860b; font-weight: bold; font-size: 11px; }
+  /* Инф.час */
+  .info-hour {
+    background: #fff8d6; color: #b8860b;
+    font-weight: bold; font-size: 12px;
+  }
 
-  /* Итоговая строка */
+  /* Итоговая строка — тёмно-зелёная как шапка */
   .total-row td {
-    background: #e8f5e9; color: #1e5631; font-weight: bold;
+    background: #81c784; color: #ffffff; font-weight: bold;
+    font-size: 13px;
   }
   .total-count { font-size: 14px; padding: 4px 6px; }
 
   /* Подсветка количества */
-  .count-low   { background: #d6eaf8 !important; color: #1b4f72 !important; }  /* апатия — голубой */
-  .count-high  { background: #c8e6c9 !important; color: #1e5631 !important; }  /* норм — светло-зелёный */
-  .count-great { background: #66bb6a !important; color: #ffffff !important; }  /* каеф — насыщенно-зелёный */
+  .count-low   { background: #d6eaf8 !important; color: #1b4f72 !important; }
+  .count-high  { background: #c8e6c9 !important; color: #1e5631 !important; }
+  .count-great { background: #66bb6a !important; color: #ffffff !important; }
 
   .smile { font-size: 16px; margin-left: 4px; }
 </style>
 </head>
 <body>
 
-<h1>♟️ Шахматный клуб — расписание</h1>
+<h1>♞ Шахматный клуб — расписание</h1>
 <div class="motivation" id="motivationTop">…</div>
 
 <div class="controls">
