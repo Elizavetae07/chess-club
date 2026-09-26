@@ -11,6 +11,12 @@ builder.Services.AddHttpClient();
 var app = builder.Build();
 app.UseCors("all");
 
+var provider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = provider
+});
+
 app.MapGet("/", () => Results.Content(File.ReadAllText("index.html"), "text/html"));
 
 app.MapGet("/api/students", () =>
