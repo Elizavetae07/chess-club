@@ -1,5 +1,6 @@
 using AngleSharp.Html.Parser;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,13 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 app.UseCors("all");
+
+// Отдаём статику из корня (favicon.png и т.д.)
+var provider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = provider
+});
 
 app.MapGet("/", () => Results.Content(File.ReadAllText("index.html"), "text/html"));
 
